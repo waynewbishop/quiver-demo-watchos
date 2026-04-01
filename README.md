@@ -2,14 +2,12 @@
 
 Most fitness watches classify effort by heart rate alone — dividing the HR range into five zones based on age-based formulas. But a heart rate of 160 BPM means different things depending on context. Running uphill at a slow pace is genuinely hard. Jogging downhill at the same heart rate is recovery. The watch doesn't know the difference.
 
-This demo uses [Quiver](https://github.com/waynewbishop/quiver) to solve that problem. `PersonalBaseline` builds zones from the runner's own data using `percentile()` — not factory defaults. Then `KNearestNeighbors` trained on four sensor signals (heart rate, cadence, pace, and elevation) classifies true effort by finding the closest matching situations in training history. When a hill inflates HR, the model sees the full picture and classifies it as "Easy" — something single-signal HR zones cannot do.
-
-All computation runs on-device in under 2 MB with zero dependencies.
+This demo uses [Quiver](https://github.com/waynewbishop/quiver) to solve that problem. `PersonalBaseline` builds zones from the runner's own data using `percentile()` — not factory defaults. Then `KNearestNeighbors` trained on four sensor signals (heart rate, cadence, pace, and elevation) classifies true effort by finding the closest matching situations in training history. When a hill inflates HR, the model sees the full picture and classifies it as "Easy" — something basic HR zones cannot do.
 
 ## Run it
 
 1. Clone this repo
-2. Open in Xcode 26
+2. Open in Xcode 26+
 3. Run on the watchOS simulator
 
 ## Screens
