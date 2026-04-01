@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DA7A8AC92F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA7A8AC82F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DA7A8ADE2F6B8EA6008E6EC1 /* Quiver in Frameworks */ = {isa = PBXBuildFile; productRef = DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,9 +41,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DA7A8ACC2F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App */ = {
+		DA7A8ACC2F6B8E35008E6EC1 /* quiver-demo-watchos Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "bishop-quiver-test-watchos Watch App";
+			path = "quiver-demo-watchos Watch App";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA7A8ADE2F6B8EA6008E6EC1 /* Quiver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +63,7 @@
 		DA7A8ABB2F6B8E35008E6EC1 = {
 			isa = PBXGroup;
 			children = (
-				DA7A8ACC2F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App */,
+				DA7A8ACC2F6B8E35008E6EC1 /* quiver-demo-watchos Watch App */,
 				DA7A8AC32F6B8E35008E6EC1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,10 +112,11 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DA7A8ACC2F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App */,
+				DA7A8ACC2F6B8E35008E6EC1 /* quiver-demo-watchos Watch App */,
 			);
 			name = "bishop-quiver-test-watchos Watch App";
 			packageProductDependencies = (
+				DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */,
 			);
 			productName = "bishop-quiver-test-watchos Watch App";
 			productReference = DA7A8AC82F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app */;
@@ -137,7 +140,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DA7A8ABF2F6B8E35008E6EC1 /* Build configuration list for PBXProject "bishop-quiver-test-watchos" */;
+			buildConfigurationList = DA7A8ABF2F6B8E35008E6EC1 /* Build configuration list for PBXProject "quiver-demo-watchos" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -146,6 +149,9 @@
 			);
 			mainGroup = DA7A8ABB2F6B8E35008E6EC1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA7A8AC32F6B8E35008E6EC1 /* Products */;
 			projectDirPath = "";
@@ -408,7 +414,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DA7A8ABF2F6B8E35008E6EC1 /* Build configuration list for PBXProject "bishop-quiver-test-watchos" */ = {
+		DA7A8ABF2F6B8E35008E6EC1 /* Build configuration list for PBXProject "quiver-demo-watchos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA7A8AD32F6B8E36008E6EC1 /* Debug */,
@@ -436,6 +442,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/waynewbishop/quiver";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */;
+			productName = Quiver;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DA7A8ABC2F6B8E35008E6EC1 /* Project object */;
 }
