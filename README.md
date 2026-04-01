@@ -1,8 +1,8 @@
 # Quiver Demo for watchOS
 
-Most fitness watches classify effort by heart rate alone — dividing the HR range into five zones based on age-based formulas. But a heart rate of 160 BPM means different things depending on context. Running uphill at a slow pace is genuinely hard. Jogging downhill at the same heart rate is recovery. The watch doesn't know the difference.
+Most platforms capture heart rate, cadence, pace, and elevation — but process them through separate proprietary algorithms. A heart rate of 160 BPM means different things depending on context. Running uphill at a slow pace is genuinely hard. Jogging downhill at the same heart rate is recovery.
 
-This demo uses [Quiver](https://github.com/waynewbishop/quiver) to solve that problem. `PersonalBaseline` builds zones from the runner's own data using `percentile()` — not factory defaults. Then `KNearestNeighbors` trained on four sensor signals (heart rate, cadence, pace, and elevation) classifies true effort by finding the closest matching situations in training history. When a hill inflates HR, the model sees the full picture and classifies it as "Easy" — something basic HR zones cannot do.
+This demo uses [Quiver](https://github.com/waynewbishop/quiver) to treat all four signals as a single feature vector. `PersonalBaseline` builds zones from the runner's own data using `percentile()` — not factory defaults. Then `KNearestNeighbors` classifies true effort by finding the closest matching situations in that combined vector space. The result is a transparent, inspectable model — not a closed-box score. When a hill inflates HR, the model sees the full picture and classifies it as "Easy."
 
 ## Run it
 

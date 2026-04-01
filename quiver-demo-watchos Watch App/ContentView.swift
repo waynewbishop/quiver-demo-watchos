@@ -79,14 +79,23 @@ struct ContentView: View {
                 card("Sensors", vm.effortLabel, .cyan)
             }
 
-            // Agreement or disagreement
+            // When HR zone and true effort disagree, any of the four
+            // dimensions could be the cause:
+            //   Elevation — inflates HR uphill, deflates effort downhill
+            //   Pace — fast pace with low HR means cardiac lag
+            //   Cadence — low cadence + high HR means grinding uphill
+            //   HR — the lagging indicator everyone else relies on alone
+            // Future: compare the current segment against matched KNN
+            // neighbors to identify which dimension drove the disagreement
+            // and display a specific message (e.g. "Terrain inflating HR",
+            // "HR lagging effort", "Cadence masking effort").
             HStack(spacing: 4) {
                 Image(systemName: vm.disagrees
                       ? "exclamationmark.triangle.fill"
                       : "checkmark.circle.fill")
                     .font(.system(size: 10))
                     .foregroundColor(vm.disagrees ? .yellow : .green)
-                Text(vm.disagrees ? "Hill inflating HR" : "HR matches effort")
+                Text(vm.disagrees ? "HR and effort disagree" : "HR matches effort")
                     .font(.system(size: 10))
                     .foregroundColor(vm.disagrees ? .yellow : .green)
             }

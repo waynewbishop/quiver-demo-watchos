@@ -6,14 +6,14 @@ import Quiver
 
 // Quiver Demo — Multi-Signal Running Simulation
 //
-// Most fitness watches classify effort by heart rate alone.
-// Quiver uses K-Nearest Neighbors (KNN) trained on four sensor
-// signals — heart rate, cadence, pace, and elevation — to
-// classify true effort. This reveals when a hill inflates HR
-// beyond the actual effort: HR 160 on a downhill is "Easy,"
-// not "Tempo." PersonalBaseline provides the statistical
-// foundation using percentile(), mean(), and std() to build
-// zones from the runner's own history instead of generic formulas.
+// Most platforms capture HR, cadence, pace, and elevation but
+// process them through separate closed-box algorithms. Quiver
+// treats all four as a single feature vector — K-Nearest Neighbors
+// classifies the combined signal in one transparent prediction.
+// This reveals when a hill inflates HR beyond the actual effort:
+// HR 160 on a downhill is "Easy," not "Tempo." PersonalBaseline
+// provides the statistical foundation using percentile(), mean(),
+// and std() to build zones from the runner's own history.
 // All computation runs on-device in under 2 MB with zero dependencies.
 
 struct Segment {
@@ -93,11 +93,26 @@ final class RunningModel {
         let newBaseline = PersonalBaseline(readings: heartRates)
         baseline = newBaseline
 
-        // Quiver trains a multi-signal classifier on 4 inputs simultaneously.
-        // Traditional watches use HR alone — Quiver sees cadence, pace,
-        // and elevation together, distinguishing a hard flat effort
-        // from an easy downhill at the same heart rate.
-        let train: [[Double]] = [[130,165,6.5,0],[135,168,6.2,0],[128,162,6.8,-1],[150,172,5.5,1],[155,174,5.3,1.5],[148,170,5.8,0.5],[160,165,6.5,-3],[158,163,6.8,-2.5],[162,167,6.2,-2],[170,180,4.8,0],[175,182,4.5,0.5],[172,178,4.6,0]]
+        // Most platforms capture HR, cadence, pace, and elevation but
+        // process them through separate proprietary algorithms. Quiver
+        // treats all four as a single feature vector — KNN classifies
+        // the combined signal in one transparent, inspectable prediction.
+        //         HR   Cadence  Pace  Elevation
+        let train: [[Double]] = [
+            [130, 165, 6.5,  0.0],   // Easy — flat, slow
+            [135, 168, 6.2,  0.0],   // Easy — flat, slow
+            [128, 162, 6.8, -1.0],   // Easy — downhill
+            [150, 172, 5.5,  1.0],   // Moderate — slight climb
+            [155, 174, 5.3,  1.5],   // Moderate — climbing
+            [148, 170, 5.8,  0.5],   // Moderate — rolling
+            [160, 165, 6.5, -3.0],   // Easy — steep downhill (HR inflated)
+            [158, 163, 6.8, -2.5],   // Easy — steep downhill (HR inflated)
+            [162, 167, 6.2, -2.0],   // Easy — downhill
+            [170, 180, 4.8,  0.0],   // Hard — fast, flat
+            [175, 182, 4.5,  0.5],   // Hard — fast, slight climb
+            [172, 178, 4.6,  0.0],   // Hard — fast, flat
+        ]
+        let labels = [0, 0, 0, 1, 1, 1, 0, 0, 0, 3, 3, 3]
 
         // FeatureScaler normalizes all signals to the same range —
         // without it, HR (130-175) would dominate cadence (162-182)
@@ -105,7 +120,7 @@ final class RunningModel {
         effortScaler = scaler
         effortKnn = KNearestNeighbors.fit(
             features: scaler.transform(train),
-            labels: [0,0,0,1,1,1,0,0,0,3,3,3], k: 3)
+            labels: labels, k: 3)
 
         readingIndex = 0; isRunning = true
         task = Task {
@@ -136,12 +151,11 @@ final class RunningModel {
         let hrZone = min(zone, Self.efforts.count - 1)
         hrLabel = Self.efforts[hrZone]
 
-        // Multi-signal classification — the key Quiver differentiator.
-        // FeatureScaler normalizes the 4 sensor inputs to the same range,
-        // then KNN finds the 3 closest training examples in that scaled
-        // space and votes on effort level. Because the model sees pace
-        // and elevation alongside HR, it classifies HR 160 on a downhill
-        // as "Easy" — something single-signal HR zones cannot do.
+        // All four signals treated as a single feature vector. FeatureScaler
+        // normalizes them to the same range, then KNN finds the 3 closest
+        // training examples in that combined space and votes on effort.
+        // The result is a transparent, inspectable classification —
+        // not a closed-box score from a proprietary algorithm.
         if let scaler = effortScaler, let model = effortKnn {
             let scaled = scaler.transform([[segment.hr, segment.cadence, segment.pace, segment.elevation]])
             let effort = model.predict(scaled)[0]
@@ -157,8 +171,21 @@ final class RunningModel {
     // with varied terrain, shuffled to create realistic transitions.
     private func simulate() -> [Segment] {
         var results: [Segment] = []
-        for _ in 0..<60 { results.append(Segment(hr: .random(in: 125...142), cadence: .random(in: 162...170), pace: .random(in: 6.0...6.8), elevation: .random(in: -0.5...0.5))) }
-        for _ in 0..<60 { results.append(Segment(hr: .random(in: 155...178), cadence: .random(in: 172...184), pace: .random(in: 4.5...5.5), elevation: .random(in: -3.0...4.0))) }
+
+        // Phase 1: easy warmup — low HR, relaxed cadence, slow pace
+        for _ in 0..<60 {
+            results.append(Segment(
+                hr: .random(in: 125...142), cadence: .random(in: 162...170),
+                pace: .random(in: 6.0...6.8), elevation: .random(in: -0.5...0.5)))
+        }
+
+        // Phase 2: hard tempo — high HR, fast cadence, varied terrain
+        for _ in 0..<60 {
+            results.append(Segment(
+                hr: .random(in: 155...178), cadence: .random(in: 172...184),
+                pace: .random(in: 4.5...5.5), elevation: .random(in: -3.0...4.0)))
+        }
+
         return results.shuffled()
     }
 }
