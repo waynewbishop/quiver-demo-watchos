@@ -28,8 +28,10 @@ final class RunningModel {
     var disagrees: Bool = false
 
     // Residual screen: observed HR, the baseline's expected HR, and the gap
-    // between them. The gap is the headline diagnostic — HR running hotter
-    // than the workload explains points to heat, drift, or altitude.
+    // between them. The gap is the headline diagnostic — a positive gap (HR
+    // running hotter than the workload explains) points to an inflating effect
+    // like heat, drift, or altitude; a negative gap means HR is running cooler
+    // than the work, as on a steep downhill where the legs carry the load.
     var expectedBpm: Int = 0
     var residual: Int = 0
 
@@ -106,7 +108,9 @@ final class RunningModel {
         residual = bpm - expectedBpm
 
         // Disagreement: HR zone says one thing, the multi-signal model says
-        // another — the downhill-inflated-HR case the demo is built to show.
+        // another — the case the demo is built to show. A steep downhill reads
+        // easy by HR while the legs work hard; a power hike reads hard by HR
+        // while the slow grind up a steep grade tells the fuller story.
         disagrees = (hrEffort != trueEffort.rawValue)
     }
 }
