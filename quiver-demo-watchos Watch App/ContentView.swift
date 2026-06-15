@@ -14,6 +14,7 @@ struct ContentView: View {
         TabView {
             zoneScreen
             effortScreen
+            residualScreen
         }
         .tabViewStyle(.verticalPage)
         .onAppear { vm.start() }
@@ -73,6 +74,14 @@ struct ContentView: View {
                 .font(.system(size: 9, design: .monospaced))
                 .foregroundColor(.secondary)
 
+            // The session score so far — the accumulated cost of the run.
+            // Anchored so one hour at threshold reads about 100; it climbs
+            // with both intensity and time, so there is no ceiling.
+            Text("Score \(vm.score)")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.cyan)
+                .monospacedDigit()
+
             // Comparison cards — warm = HR, cool = multi-signal
             HStack(spacing: 8) {
                 card("HR Zone", vm.hrLabel, .orange)
@@ -103,6 +112,52 @@ struct ContentView: View {
         .padding(.horizontal, 8)
     }
 
+    // MARK: - Screen 3: Effort Residual
+    // The new engine's headline signal. The Ridge baseline predicts the HR
+    // this workload should produce; the gap to observed HR is cardiac
+    // decoupling — heat, drift, or altitude pushing HR up without more effort.
+    // Near zero (cyan) = HR matches the work. Positive (yellow→red) = running
+    // hot. Negative (green) = fresh, HR below what the work would predict.
+
+    private var residualScreen: some View {
+        VStack(spacing: 8) {
+
+            Text("HR  vs  EXPECTED")
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundColor(.secondary)
+
+            // Observed and model-expected HR, side by side.
+            HStack(spacing: 8) {
+                card("Observed", "\(vm.bpm)", .orange)
+                card("Expected", "\(vm.expectedBpm)", .cyan)
+            }
+
+            // The gap — heart rate read in context, big and signed.
+            HStack(spacing: 4) {
+                Image(systemName: residualSymbol)
+                    .font(.system(size: 16, weight: .bold))
+                Text(residualText)
+                    .font(.system(size: 30, weight: .bold))
+                    .monospacedDigit()
+            }
+            .foregroundColor(residualColor)
+
+            // One-word read on what the gap means.
+            Text(residualCaption)
+                .font(.system(size: 11))
+                .foregroundColor(residualColor)
+
+            // The likely cause when HR is running hot — the misleading effects
+            // the baseline residual is built to surface.
+            if vm.residual >= 6 {
+                Text("heat · drift · altitude")
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.horizontal, 8)
+    }
+
     // MARK: - Helpers
 
     private func card(_ title: String, _ value: String, _ color: Color) -> some View {
@@ -126,6 +181,38 @@ struct ContentView: View {
         let zoneIndex = min(vm.zone, 4)
         if zoneIndex == 2 { return .white }
         return zoneColors[zoneIndex]
+    }
+
+    // Residual band: near zero is in agreement (cyan), a small positive gap
+    // is mild decoupling (yellow), a large one is running hot (red), and a
+    // negative gap means fresh — HR below what the work predicts (green).
+    private var residualColor: Color {
+        switch vm.residual {
+        case ..<(-3): return .green
+        case -3...5:  return .cyan
+        case 6...12:  return .yellow
+        default:      return .red
+        }
+    }
+
+    private var residualSymbol: String {
+        if vm.residual >= 6 { return "arrow.up" }
+        if vm.residual <= -4 { return "arrow.down" }
+        return "equal"
+    }
+
+    // Signed gap, e.g. "+13" or "−5".
+    private var residualText: String {
+        let v = vm.residual
+        return v > 0 ? "+\(v)" : (v < 0 ? "−\(abs(v))" : "0")
+    }
+
+    private var residualCaption: String {
+        switch vm.residual {
+        case ..<(-3): return "running fresh"
+        case -3...5:  return "HR matches work"
+        default:      return "running hot"
+        }
     }
 }
 

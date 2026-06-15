@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA1DB2142FE04BC200EE8557 /* Quiver in Frameworks */ = {isa = PBXBuildFile; productRef = DA1DB2132FE04BC200EE8557 /* Quiver */; };
 		DA7A8AC92F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA7A8AC82F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		DA7A8ADE2F6B8EA6008E6EC1 /* Quiver in Frameworks */ = {isa = PBXBuildFile; productRef = DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA7A8ADE2F6B8EA6008E6EC1 /* Quiver in Frameworks */,
+				DA1DB2142FE04BC200EE8557 /* Quiver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,7 +116,7 @@
 			);
 			name = "bishop-quiver-test-watchos Watch App";
 			packageProductDependencies = (
-				DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */,
+				DA1DB2132FE04BC200EE8557 /* Quiver */,
 			);
 			productName = "bishop-quiver-test-watchos Watch App";
 			productReference = DA7A8AC82F6B8E35008E6EC1 /* bishop-quiver-test-watchos Watch App.app */;
@@ -150,7 +150,7 @@
 			mainGroup = DA7A8ABB2F6B8E35008E6EC1;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */,
+				DA1DB2122FE04BC200EE8557 /* XCRemoteSwiftPackageReference "quiver" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA7A8AC32F6B8E35008E6EC1 /* Products */;
@@ -444,20 +444,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */ = {
+		DA1DB2122FE04BC200EE8557 /* XCRemoteSwiftPackageReference "quiver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/waynewbishop/quiver";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 1.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DA7A8ADD2F6B8EA6008E6EC1 /* Quiver */ = {
+		DA1DB2132FE04BC200EE8557 /* Quiver */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DA7A8ADC2F6B8EA6008E6EC1 /* XCRemoteSwiftPackageReference "quiver" */;
+			package = DA1DB2122FE04BC200EE8557 /* XCRemoteSwiftPackageReference "quiver" */;
 			productName = Quiver;
 		};
 /* End XCSwiftPackageProductDependency section */
